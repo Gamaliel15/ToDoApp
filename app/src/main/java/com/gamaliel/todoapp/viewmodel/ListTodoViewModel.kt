@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.gamaliel.todoapp.model.Todo
 import com.gamaliel.todoapp.model.TodoDatabase
+import com.gamaliel.todoapp.util.buildDb
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -27,7 +28,7 @@ class ListTodoViewModel(application: Application):AndroidViewModel(application),
         loadingLD.value = true
         todoLoadErrorLD.value = false
         launch {        //menjalankan di thread yang terpisah
-            val db = TodoDatabase.buildDatabase(
+            val db = buildDb(
                 getApplication()
             )
 
@@ -38,7 +39,7 @@ class ListTodoViewModel(application: Application):AndroidViewModel(application),
 
     fun clearTask(todo: Todo) {
         launch {
-            val db = TodoDatabase.buildDatabase(
+            val db = buildDb(
                 getApplication()
             )
             db.todoDao().deleteTodo(todo)
