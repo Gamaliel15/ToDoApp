@@ -12,7 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-class ListTodoViewModel(application: Application):AndroidViewModel(application), CoroutineScope {
+class ListTodoViewModel(application: Application) : AndroidViewModel(application), CoroutineScope {
 
     val todoLD = MutableLiveData<List<Todo>>()
     val todoLoadErrorLD = MutableLiveData<Boolean>()
@@ -23,31 +23,21 @@ class ListTodoViewModel(application: Application):AndroidViewModel(application),
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.IO
 
-
     fun refresh() {
         loadingLD.value = true
         todoLoadErrorLD.value = false
-        launch {        //menjalankan di thread yang terpisah
-            val db = buildDb(
-                getApplication()
-            )
-
+        launch {
+            val db = buildDb(getApplication())
             todoLD.postValue(db.todoDao().selectAllTodo())
             loadingLD.postValue(false)
         }
     }
 
-    fun clearTask(todo: Todo) {
+    fun markTaskAsDone(todo: Todo) {
         launch {
-            val db = buildDb(
-                getApplication()
-            )
-            db.todoDao().deleteTodo(todo)
-
+            val db = buildDb(getApplication())
+            db.todoDao().markAsDone(todo.uuid)
             todoLD.postValue(db.todoDao().selectAllTodo())
         }
     }
-
-
-
 }

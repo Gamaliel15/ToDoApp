@@ -11,15 +11,13 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.gamaliel.todoapp.R
 import com.gamaliel.todoapp.databinding.FragmentTodoListBinding
-import com.gamaliel.todoapp.model.Todo
 import com.gamaliel.todoapp.viewmodel.ListTodoViewModel
-
 
 class TodoListFragment : Fragment() {
 
     private lateinit var binding: FragmentTodoListBinding
-    private lateinit var viewModel:ListTodoViewModel
-    private var adapter = TodoListAdapter(arrayListOf(), { todo -> viewModel.clearTask(todo) })
+    private lateinit var viewModel: ListTodoViewModel
+    private var adapter = TodoListAdapter(arrayListOf(), { todo -> viewModel.markTaskAsDone(todo) })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,33 +43,26 @@ class TodoListFragment : Fragment() {
         observeViewModel()
     }
 
-    fun observeViewModel(){
+    private fun observeViewModel() {
         viewModel.todoLD.observe(viewLifecycleOwner, Observer {
             adapter.updateTodoList(it)
-            if(it.isEmpty()) {
-                binding.recViewTodo?.visibility = View.GONE
-                binding.txtError.setText("Your todo still empty.")
+            if (it.isEmpty()) {
+                binding.recViewTodo.visibility = View.GONE
+                binding.txtError.text = "Your todo list is empty."
+                binding.txtError.visibility = View.VISIBLE
             } else {
-                binding.recViewTodo?.visibility = View.VISIBLE
+                binding.recViewTodo.visibility = View.VISIBLE
+                binding.txtError.visibility = View.GONE
             }
         })
 
         viewModel.loadingLD.observe(viewLifecycleOwner, Observer {
-            if(it == false) {
-                binding.progressBar.visibility = View.GONE
-            } else {
-                binding.progressBar.visibility = View.VISIBLE
-            }
+            binding.progressBar.visibility = if (it) View.VISIBLE else View.GONE
         })
 
         viewModel.todoLoadErrorLD.observe(viewLifecycleOwner, Observer {
-            if(it == false) {
-                binding.txtError.visibility = View.GONE
-            } else {
-                binding.txtError.visibility = View.VISIBLE
-                binding.txtError.text = "Error gan"
-            }
+            binding.txtError.visibility = if (it) View.VISIBLE else View.GONE
+            binding.txtError.text = "Error loading todos."
         })
-
     }
 }
