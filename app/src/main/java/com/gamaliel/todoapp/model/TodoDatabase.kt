@@ -7,8 +7,9 @@ import androidx.room.RoomDatabase
 import com.gamaliel.todoapp.util.DB_NAME
 import com.gamaliel.todoapp.util.MIGRATION_1_2
 import com.gamaliel.todoapp.util.MIGRATION_2_3
+import com.gamaliel.todoapp.util.MIGRATION_3_4
 
-@Database(entities = arrayOf(Todo::class), version = 3)
+@Database(entities = arrayOf(Todo::class), version = 4)
 abstract class TodoDatabase:RoomDatabase() {
     abstract fun todoDao():TodoDao
 
@@ -20,7 +21,7 @@ abstract class TodoDatabase:RoomDatabase() {
             Room.databaseBuilder(
                 context.applicationContext,
                 TodoDatabase::class.java,
-                DB_NAME).addMigrations(MIGRATION_1_2, MIGRATION_2_3).build()
+                DB_NAME).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4).build()
 
         operator fun invoke(context:Context) {
             if(instance!=null) {

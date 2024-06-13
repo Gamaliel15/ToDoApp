@@ -13,7 +13,9 @@ data class Todo (
     @ColumnInfo(name="priority")
     var priority:Int,
     @ColumnInfo(name="is_done", defaultValue = "0")
-    var isDone: Int = 0  // data tipe boolean tidak support dalam database
+    var isDone: Int = 0,  // data tipe boolean tidak support dalam database
+    @ColumnInfo(name = "todo_date")
+    var todo_date:Int
 
 ){
     @PrimaryKey(autoGenerate = true)
